@@ -1,0 +1,774 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-title" content="Unit 3 Kids">
+    <title>Unit 3: Traditions</title>
+    <style>
+        /* --- CẤU HÌNH GIAO DIỆN (THEME - TRADITIONS/CELEBRATIONS) --- */
+        :root {
+            --primary: #f43f5e; /* Đỏ hồng (Festive Red) */
+            --primary-dark: #e11d48;
+            --secondary: #f59e0b; /* Vàng (Gold) */
+            --bg: #fff1f2; /* Nền hồng nhạt */
+            --white: #ffffff;
+            --text: #374151;
+            --font-main: "Comic Sans MS", "Chalkboard SE", sans-serif;
+        }
+        
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; outline: none; }
+
+        body {
+            font-family: var(--font-main);
+            background-color: var(--bg);
+            color: var(--text);
+            margin: 0; padding: 0;
+            height: 100vh;
+            display: flex; flex-direction: column;
+            overflow: hidden;
+        }
+
+        /* --- HEADER --- */
+        header {
+            background: linear-gradient(135deg, #fca5a5 0%, #e11d48 100%);
+            color: white;
+            padding: 15px;
+            padding-top: max(15px, env(safe-area-inset-top));
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            z-index: 10;
+            border-bottom-left-radius: 20px;
+            border-bottom-right-radius: 20px;
+        }
+        header h1 { margin: 0; font-size: 1.4rem; text-shadow: 1px 1px 2px rgba(0,0,0,0.2); }
+        header p { margin: 5px 0 0 0; font-size: 0.8rem; opacity: 0.9; }
+
+        /* --- CONTENT AREA --- */
+        main {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+            padding-bottom: 120px; /* Chừa chỗ cho menu dưới */
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .section { display: none; animation: popUp 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        .section.active { display: block; }
+        @keyframes popUp { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
+
+        /* --- UI COMPONENTS --- */
+        .card {
+            background: var(--white);
+            border-radius: 25px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.05);
+            border: 2px solid #ffe4e6;
+        }
+
+        /* --- AUDIO BUTTONS --- */
+        .speak-btn {
+            background: #ffe4e6; color: #e11d48; border: 2px solid #fda4af;
+            width: 40px; height: 40px; border-radius: 50%;
+            display: inline-flex; align-items: center; justify-content: center;
+            font-size: 1.2rem; cursor: pointer; margin-right: 10px; flex-shrink: 0;
+            box-shadow: 0 3px 0 #fb7185;
+        }
+        .speak-btn:active { transform: translateY(3px); box-shadow: none; }
+
+        .speak-btn-sm {
+            background: #fff; border: 1px solid #fda4af; color: #e11d48;
+            width: 30px; height: 30px; border-radius: 50%;
+            display: inline-flex; align-items: center; justify-content: center;
+            font-size: 0.9rem; cursor: pointer; margin-right: 8px; margin-top: 2px;
+            flex-shrink: 0; box-shadow: 0 2px 0 #ffe4e6; vertical-align: middle;
+        }
+        .speak-btn-sm:active { transform: translateY(2px); box-shadow: none; background: #ffe4e6; }
+
+        /* --- PREPARE & STRATEGY BOXES --- */
+        .strategy-box {
+            background: #fffbeb; border: 2px dashed #f59e0b;
+            border-radius: 15px; padding: 15px; margin-bottom: 20px;
+        }
+        .strategy-title { color: #b45309; font-weight: bold; margin-bottom: 5px; display: flex; align-items: center; gap: 5px; }
+        .strategy-desc { font-size: 0.95rem; color: #78350f; line-height: 1.4; }
+
+        /* --- WORDS TO KNOW LIST --- */
+        .words-to-know-item {
+            background: #fdf2f8; border-left: 4px solid #f43f5e;
+            padding: 10px; margin-bottom: 10px; border-radius: 8px;
+            display: flex; align-items: flex-start;
+        }
+        .wtk-sentence { font-style: italic; color: #475569; font-size: 0.95rem; line-height: 1.5; flex: 1; }
+        .wtk-word { color: #be123c; font-weight: bold; text-decoration: underline; background: #fecdd3; padding: 0 4px; border-radius: 4px; }
+
+        /* --- PHONICS --- */
+        .phonics-card {
+            text-align: center; background: #fff1f2; border: 2px solid #fda4af;
+            padding: 15px; border-radius: 15px; margin-bottom: 15px;
+        }
+        .phonics-sound { font-size: 1.5rem; color: #e11d48; font-weight: bold; margin-bottom: 10px; display: block; border-bottom: 1px dashed #fecdd3; padding-bottom: 5px;}
+        .phonics-list { text-align: left; }
+        .phonics-item { margin-bottom: 8px; font-size: 1.1rem; color: #9f1239; display: flex; align-items: center; justify-content: space-between; }
+        .phonics-ipa { font-family: monospace; color: #6b7280; font-size: 0.9rem; background: #fff; padding: 2px 6px; border-radius: 4px; }
+
+        /* --- READING TEXT --- */
+        .para-en { font-size: 1.1rem; line-height: 1.5; color: #111; margin-bottom: 10px; }
+        .para-vn { color: #666; font-style: italic; font-size: 0.9rem; border-left: 3px solid #f43f5e; padding-left: 10px; margin-bottom: 15px; display: none; }
+
+        /* --- THINK IT OVER --- */
+        .think-question {
+            background: #ecfccb; padding: 15px; border-radius: 15px;
+            margin-bottom: 15px; border-left: 5px solid #84cc16;
+        }
+        .think-q-text { font-weight: bold; color: #3f6212; margin-bottom: 5px; }
+        .think-answer-area { 
+            width: 100%; height: 50px; border: 1px dashed #a3e635; 
+            border-radius: 10px; background: white; padding: 10px; font-family: inherit;
+        }
+
+        /* --- GRAMMAR --- */
+        .grammar-box {
+            background: #f0f9ff; border: 2px solid #bae6fd;
+            padding: 15px; border-radius: 15px; margin-bottom: 20px;
+        }
+        .grammar-rule { color: #0369a1; font-weight: bold; margin-bottom: 10px; font-size: 1.1rem; }
+        .practice-item { margin-bottom: 12px; }
+        .practice-input { width: 100%; padding: 8px; border: 2px solid #e5e7eb; border-radius: 10px; font-family: inherit; }
+
+        /* --- FLASHCARDS --- */
+        .vocab-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 15px; }
+        .flip-card { height: 200px; perspective: 1000px; cursor: pointer; position: relative; }
+        .flip-card-inner { position: relative; width: 100%; height: 100%; text-align: center; transition: transform 0.6s; transform-style: preserve-3d; }
+        .flip-card.flipped .flip-card-inner { transform: rotateY(180deg); }
+        .flip-front, .flip-back {
+            position: absolute; width: 100%; height: 100%; backface-visibility: hidden; -webkit-backface-visibility: hidden;
+            border-radius: 20px; display: flex; flex-direction: column; justify-content: center; align-items: center;
+            padding: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        .flip-front { background: white; border: 3px solid #fecdd3; z-index: 2; transform: rotateY(0deg); }
+        .flip-back { background: #ffe4e6; transform: rotateY(180deg); border: 3px solid #e11d48; z-index: 1; }
+        .word-img { font-size: 3.5rem; margin-bottom: 5px; display: block; }
+        .word-text { font-size: 1.3rem; color: #9f1239; font-weight: 800; margin: 0; }
+        .ipa-badge { background: #f3f4f6; color: #555; padding: 2px 6px; border-radius: 6px; font-family: monospace; font-size: 0.85rem; margin-top: 5px; }
+        .card-speak-btn {
+            background: #fff; color: #e11d48; border: 2px solid #fda4af; width: 35px; height: 35px;
+            border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1rem;
+            margin-top: 10px; cursor: pointer; z-index: 10; position: relative;
+        }
+        .card-speak-btn:active { background: #ffe4e6; transform: scale(0.95); }
+
+        /* --- NAVIGATION --- */
+        nav {
+            position: fixed; bottom: 0; width: 100%;
+            background: rgba(255,255,255,0.95); backdrop-filter: blur(5px);
+            border-top: 1px solid #e5e7eb; display: flex; 
+            padding-bottom: max(15px, env(safe-area-inset-bottom)); padding-top: 10px;
+            box-shadow: 0 -5px 20px rgba(0,0,0,0.05);
+            border-top-left-radius: 25px; border-top-right-radius: 25px;
+            z-index: 20;
+        }
+        .nav-item {
+            flex: 1; text-align: center; font-size: 0.65rem; color: #9ca3af; transition: all 0.2s;
+        }
+        .nav-item.active { color: #e11d48; transform: translateY(-5px); font-weight: bold; }
+        .nav-icon { display: block; font-size: 1.4rem; margin-bottom: 3px; }
+
+        /* --- SUB TABS --- */
+        .sub-tabs { display: flex; gap: 8px; overflow-x: auto; margin-bottom: 15px; padding-bottom: 5px; scrollbar-width: none; }
+        .sub-tab-btn {
+            background: #e5e7eb; border: none; padding: 8px 12px; border-radius: 20px;
+            white-space: nowrap; font-size: 0.85rem; color: #4b5563; font-weight: 600;
+        }
+        .sub-tab-btn.active { background: var(--primary); color: white; }
+        .sub-content { display: none; }
+        .sub-content.active { display: block; }
+
+        /* Warning */
+        #sound-check { 
+            background: #fef9c3; border: 1px solid #facc15; color: #854d0e;
+            padding: 8px; border-radius: 8px; font-size: 0.8rem; text-align: center;
+            margin-bottom: 10px; display: none;
+        }
+
+        /* --- NEW STYLES FROM TOTAL TAB --- */
+        .step-box {
+            display: flex; align-items: flex-start; margin-bottom: 12px;
+            background: white; padding: 10px; border-radius: 12px; border: 1px solid #e2e8f0;
+        }
+        .step-num { 
+            font-size: 1.5rem; margin-right: 12px; background: #ffe4e6; width: 35px; height: 35px;
+            display: flex; align-items: center; justify-content: center; border-radius: 50%; flex-shrink: 0; color: #e11d48;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>🎈 Unit 3: Traditions 🏮</h1>
+    </header>
+
+    <main>
+        <!-- TAB 1: OVERVIEW -->
+        <div id="tab-overview" class="section active">
+            <div id="sound-check">🔊 Bật chuông để nghe tiếng nhé!</div>
+
+            <div class="card" style="text-align: center; background: #fffbeb; border-color: #fcd34d;">
+                <h2 style="color: #b45309; margin-top:0;">❓ Big Question</h2>
+                <p style="font-size: 1.1rem; font-weight: bold; color: #d97706; margin: 10px 0;">"What is your favorite way to celebrate?"</p>
+                <p style="color: #78350f; font-size: 0.9rem;">(Bạn thích tổ chức ăn mừng như thế nào?)</p>
+            </div>
+
+            <div class="card" style="background: #eff6ff; border-color: #bfdbfe;">
+                <h3 style="color: #1e40af; margin-top: 0;">☀️ Warm Up</h3>
+                <ul style="padding-left: 20px; line-height: 1.6; font-size: 0.95rem;">
+                    <li>People follow traditions. (Mọi người làm theo truyền thống.)</li>
+                    <li>A Thanksgiving parade is a tradition. (Diễu hành lễ Tạ ơn là một truyền thống.)</li>
+                </ul>
+                <hr style="border: 0; border-top: 1px dashed #93c5fd; margin: 10px 0;">
+                <p style="font-weight:bold; color: #1e3a8a;">Key Ideas:</p>
+                <ul style="padding-left: 20px; line-height: 1.6; font-size: 0.95rem;">
+                    <li>Families have picnics.</li>
+                    <li>People give cards to each other.</li>
+                    <li>Tell the class about a tradition in your family.</li>
+                </ul>
+            </div>
+
+            <!-- SONG SECTION -->
+            <div class="card" style="background: #fdf4ff; border-color: #f0abfc;">
+                <h3 style="color: #86198f; margin-top: 0;">🎵 Song: Family Traditions Song</h3>
+                <div style="font-style: italic; color: #701a75; line-height: 1.6; font-size: 0.95rem; text-align:center;">
+                    <p>Family, family, get together.<br>
+                    Time to celebrate, all together.<br>
+                    We meet and greet.<br>
+                    What will you say?</p>
+                    <hr style="border:0; border-top:1px dashed #e879f9; width:50%; margin:10px auto;">
+                    <p>Gather around.<br>
+                    And let us play.<br>
+                    Family, family, get together.<br>
+                    Time to celebrate, all together.</p>
+                </div>
+            </div>
+
+            <!-- PHONICS -->
+            <div class="card">
+                <h3 style="color: #f43f5e; margin-top:0;">🔊 Phonics (Ngữ âm)</h3>
+                
+                <div class="phonics-card">
+                    <span class="phonics-sound">Long i / v / x</span>
+                    <div class="phonics-list">
+                        <div class="phonics-item"><span class="phonics-word">ride, kite, bike</span><span class="phonics-ipa">/aɪ/</span></div>
+                        <div class="phonics-item"><span class="phonics-word">van, wave</span><span class="phonics-ipa">/v/</span></div>
+                        <div class="phonics-item"><span class="phonics-word">ox, box</span><span class="phonics-ipa">/ks/</span></div>
+                    </div>
+                    <button class="speak-btn" style="margin-top:10px; width:100%; height:35px; font-size:0.9rem; border-radius:10px;" onclick="speak('ride, kite, bike, van, wave, ox, box')">🔊 Nghe (Listen)</button>
+                </div>
+
+                <div class="phonics-card">
+                    <span class="phonics-sound">Long u / k / ck</span>
+                    <div class="phonics-list">
+                        <div class="phonics-item"><span class="phonics-word">used, cube</span><span class="phonics-ipa">/juː/</span></div>
+                        <div class="phonics-item"><span class="phonics-word">kite, kick</span><span class="phonics-ipa">/k/</span></div>
+                        <div class="phonics-item"><span class="phonics-word">duck, sock</span><span class="phonics-ipa">/k/</span></div>
+                    </div>
+                    <button class="speak-btn" style="margin-top:10px; width:100%; height:35px; font-size:0.9rem; border-radius:10px;" onclick="speak('used, cube, kite, kick, duck, sock')">🔊 Nghe (Listen)</button>
+                </div>
+
+                <div class="phonics-card">
+                    <span class="phonics-sound">Long o / g / z</span>
+                    <div class="phonics-list">
+                        <div class="phonics-item"><span class="phonics-word">stove, hole</span><span class="phonics-ipa">/oʊ/</span></div>
+                        <div class="phonics-item"><span class="phonics-word">gate, goat</span><span class="phonics-ipa">/g/</span></div>
+                        <div class="phonics-item"><span class="phonics-word">zip, zoo</span><span class="phonics-ipa">/z/</span></div>
+                    </div>
+                    <button class="speak-btn" style="margin-top:10px; width:100%; height:35px; font-size:0.9rem; border-radius:10px;" onclick="speak('stove, hole, gate, goat, zip, zoo')">🔊 Nghe (Listen)</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB 2: READINGS -->
+        <div id="tab-readings" class="section">
+            <div class="sub-tabs">
+                <button class="sub-tab-btn active" onclick="showSubTab('read', 'r1', this)">1. Celebration Time</button>
+                <button class="sub-tab-btn" onclick="showSubTab('read', 'r2', this)">2. Chinese New Year</button>
+                <button class="sub-tab-btn" onclick="showSubTab('read', 'r3', this)">3. A Flag</button>
+            </div>
+
+            <!-- READING 1 -->
+            <div id="r1" class="sub-content active">
+                <div class="strategy-box">
+                    <div class="strategy-title">💡 Strategy: Use Pictures (Dùng hình ảnh)</div>
+                    <div class="strategy-desc">Looking carefully at the pictures can help you better understand the story.</div>
+                </div>
+
+                <div class="card">
+                    <h3 style="color:#be185d; margin-top:0;">📝 Words to Know</h3>
+                    
+                    <div class="words-to-know-item">
+                        <button class="speak-btn-sm" onclick="speak('Lots of people play at birthday parties.')">🔊</button>
+                        <div class="wtk-sentence">1. Lots <span class="wtk-word">of</span> people play at birthday parties.</div>
+                    </div>
+                    <div class="words-to-know-item">
+                        <button class="speak-btn-sm" onclick="speak('I like to play, too.')">🔊</button>
+                        <div class="wtk-sentence">2. I like <span class="wtk-word">to</span> play, too.</div>
+                    </div>
+                    <div class="words-to-know-item">
+                        <button class="speak-btn-sm" onclick="speak('I like green balloons best.')">🔊</button>
+                        <div class="wtk-sentence">3. I like <span class="wtk-word">green</span> balloons best.</div>
+                    </div>
+                    <div class="words-to-know-item">
+                        <button class="speak-btn-sm" onclick="speak('A carnival is a celebration.')">🔊</button>
+                        <div class="wtk-sentence">4. A <span class="wtk-word">carnival</span> is a <span class="wtk-word">celebration</span>.</div>
+                    </div>
+                    <div class="words-to-know-item">
+                        <button class="speak-btn-sm" onclick="speak('People can wear a costume.')">🔊</button>
+                        <div class="wtk-sentence">5. People can wear a <span class="wtk-word">costume</span>.</div>
+                    </div>
+
+                    <div style="margin-top:15px; padding-top:10px; border-top:1px dashed #cbd5e1;">
+                        <p style="font-size:0.85rem; color:#64748b; font-weight:bold; margin-bottom:5px;">🎧 Nghe Words to Know:</p>
+                        <audio controls style="width: 100%; border-radius: 30px;">
+                            <source src="CS_L1_AUD_U03_p008_03.mp3" type="audio/mpeg">
+                            Trình duyệt không hỗ trợ.
+                        </audio>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3 style="color:#0369a1; margin-top:0;">📖 Celebration Time!</h3>
+                    <div style="margin-bottom:10px;">
+                        <button class="speak-btn" onclick="speak('I am having lots and lots of fun! It is celebration time!')">🔊</button>
+                        <p class="para-en">I am having lots and lots of fun! It is celebration time!</p>
+                    </div>
+                    <div style="margin-bottom:10px;">
+                        <button class="speak-btn" onclick="speak('It is the New Year. It can be named for an ox, rat, or ram. Around the world, it is celebration time!')">🔊</button>
+                        <p class="para-en">It is the New Year. It can be named for an ox, rat, or ram. Around the world, it is celebration time!</p>
+                    </div>
+                    <div style="margin-bottom:10px;">
+                        <button class="speak-btn" onclick="speak('I can have a fun time at a carnival. I can put on a big blue wig and a mask to hide.')">🔊</button>
+                        <p class="para-en">I can have a fun time at a carnival. I can put on a big blue wig and a mask to hide.</p>
+                    </div>
+                    <div style="margin-bottom:10px;">
+                        <button class="speak-btn" onclick="speak('I can smile and dress up. I can dress up in a red and green costume. It is fun to dress up in a hat.')">🔊</button>
+                        <p class="para-en">I can smile and dress up. I can dress up in a red and green costume. It is fun to dress up in a hat.</p>
+                    </div>
+                    <div style="margin-bottom:10px;">
+                        <button class="speak-btn" onclick="speak('On July 4, I can dress up in red, white, and blue. I can wave a flag.')">🔊</button>
+                        <p class="para-en">On July 4, I can dress up in red, white, and blue. I can wave a flag.</p>
+                    </div>
+                    <div style="margin-bottom:10px;">
+                        <button class="speak-btn" onclick="speak('Mom, Dad, and I are gazing at the sky. Pop! Pop! Pop! Pop! Pop! Pop!')">🔊</button>
+                        <p class="para-en">Mom, Dad, and I are gazing at the sky. Pop! Pop! Pop! Pop! Pop! Pop!</p>
+                    </div>
+                    <div style="margin-bottom:10px;">
+                        <button class="speak-btn" onclick="speak('In Ghana, tribes plant crops. It is celebration time. Lots of drums go tap, tap, tap!')">🔊</button>
+                        <p class="para-en">In Ghana, tribes plant crops. It is celebration time. Lots of drums go tap, tap, tap!</p>
+                    </div>
+
+                    <div style="margin-top:20px; padding-top:15px; border-top:1px dashed #cbd5e1;">
+                        <p style="font-size:0.9rem; color:#0369a1; font-weight:bold; margin-bottom:5px;">🎧 Nghe bài đọc (Audio):</p>
+                        <audio controls style="width: 100%; border-radius: 30px; background:#f1f5f9;">
+                            <source src="CS_L1_AUD_U03_p011.mp3" type="audio/mpeg">
+                        </audio>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3 style="color:#15803d; margin-top:0;">🤔 Think It Over</h3>
+                    <div class="think-question">
+                        <div class="think-q-text">1. What can the New Year be named for?</div>
+                        <textarea class="think-answer-area"></textarea>
+                    </div>
+                    <div class="think-question">
+                        <div class="think-q-text">2. Why do people like to dress up for celebrations?</div>
+                        <textarea class="think-answer-area"></textarea>
+                    </div>
+                    <div class="think-question">
+                        <div class="think-q-text">3. How are some celebrations the same?</div>
+                        <textarea class="think-answer-area"></textarea>
+                    </div>
+                </div>
+            </div>
+
+            <!-- READING 2 -->
+            <div id="r2" class="sub-content">
+                <div class="strategy-box">
+                    <div class="strategy-title">💡 Strategy: Summarize (Tóm tắt)</div>
+                    <div class="strategy-desc">Tell the most important information in a story.</div>
+                </div>
+
+                <div class="card">
+                    <h3 style="color:#be185d; margin-top:0;">📝 Words to Know</h3>
+                    <div class="words-to-know-item">
+                        <button class="speak-btn-sm" onclick="speak('First, they got red envelopes.')">🔊</button>
+                        <div class="wtk-sentence">1. <span class="wtk-word">First</span> they got red <span class="wtk-word">envelopes</span>.</div>
+                    </div>
+                    <div class="words-to-know-item">
+                        <button class="speak-btn-sm" onclick="speak('Then they took a ride with friends.')">🔊</button>
+                        <div class="wtk-sentence">2. <span class="wtk-word">Then</span> they took a ride <span class="wtk-word">with</span> friends.</div>
+                    </div>
+                    <div class="words-to-know-item">
+                        <button class="speak-btn-sm" onclick="speak('They saw the dragons dancing.')">🔊</button>
+                        <div class="wtk-sentence">3. They saw the <span class="wtk-word">dragons</span> dancing.</div>
+                    </div>
+                    <div class="words-to-know-item">
+                        <button class="speak-btn-sm" onclick="speak('The parade was so much fun!')">🔊</button>
+                        <div class="wtk-sentence">4. The <span class="wtk-word">parade</span> was so much fun!</div>
+                    </div>
+                    
+                    <div style="margin-top:15px; padding-top:10px; border-top:1px dashed #cbd5e1;">
+                        <audio controls style="width: 100%; border-radius: 30px;">
+                            <source src="CS_L1_AUD_U03_p022_03.mp3" type="audio/mpeg">
+                        </audio>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3 style="color:#0369a1; margin-top:0;">📖 Chinese New Year</h3>
+                    <div style="margin-bottom:10px;">
+                        <button class="speak-btn" onclick="speak('Every year people say, Hooray! Because the Chinese New Year lasts for 15 days.')">🔊</button>
+                        <p class="para-en">Every year people say, “Hooray!” Because the Chinese New Year lasts for 15 days.</p>
+                    </div>
+                    <div style="margin-bottom:10px;">
+                        <button class="speak-btn" onclick="speak('First, it is time for the family to eat. Sweet rice cakes are a great treat!')">🔊</button>
+                        <p class="para-en">First, it’s time for the family to eat. Sweet rice cakes are a great treat!</p>
+                    </div>
+                    <div style="margin-bottom:10px;">
+                        <button class="speak-btn" onclick="speak('Next, Chen gives Kai a sweet snack, and then Kai gives him one back.')">🔊</button>
+                        <p class="para-en">Next, Chen gives Kai a sweet snack, and then Kai gives him one back.</p>
+                    </div>
+                    <div style="margin-bottom:10px;">
+                        <button class="speak-btn" onclick="speak('Then Grandma gives them envelopes that are red. There are coins inside! they said.')">🔊</button>
+                        <p class="para-en">Then Grandma gives them envelopes that are red. “There are coins inside!” they said.</p>
+                    </div>
+                    <div style="margin-bottom:10px;">
+                        <button class="speak-btn" onclick="speak('Look at the cute dragon the children made. They bring it with them to the parade.')">🔊</button>
+                        <p class="para-en">Look at the cute dragon the children made. They bring it with them to the parade.</p>
+                    </div>
+                    <div style="margin-bottom:10px;">
+                        <button class="speak-btn" onclick="speak('At the parade they see dragons and lions dancing.')">🔊</button>
+                        <p class="para-en">At the parade they see dragons and lions dancing.</p>
+                    </div>
+                    <div style="margin-bottom:10px;">
+                        <button class="speak-btn" onclick="speak('On the fifteenth day, they look up in the night sky to see lots of lights passing by.')">🔊</button>
+                        <p class="para-en">On the fifteenth day, they look up in the night sky to see lots of lights passing by.</p>
+                    </div>
+                    <div style="margin-bottom:10px;">
+                        <button class="speak-btn" onclick="speak('Finally, the Chinese New Year is done. Everyone is tired but had lots of fun.')">🔊</button>
+                        <p class="para-en">Finally, the Chinese New Year is done. Everyone is tired but had lots of fun.</p>
+                    </div>
+
+                    <div style="margin-top:20px; padding-top:15px; border-top:1px dashed #cbd5e1;">
+                         <audio controls style="width: 100%; border-radius: 30px; background:#f1f5f9;">
+                            <source src="CS_L1_AUD_U03_p025.mp3" type="audio/mpeg">
+                        </audio>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3 style="color:#15803d; margin-top:0;">🤔 Think It Over</h3>
+                    <div class="think-question">
+                        <div class="think-q-text">1. How long does the Chinese New Year last?</div>
+                        <textarea class="think-answer-area"></textarea>
+                    </div>
+                    <div class="think-question">
+                        <div class="think-q-text">2. What does Grandma give the kids?</div>
+                        <textarea class="think-answer-area"></textarea>
+                    </div>
+                    <div class="think-question">
+                        <div class="think-q-text">3. What do they see at the parade?</div>
+                        <textarea class="think-answer-area"></textarea>
+                    </div>
+                </div>
+            </div>
+
+            <!-- READING 3 -->
+            <div id="r3" class="sub-content">
+                <div class="strategy-box">
+                    <div class="strategy-title">💡 Strategy: Visualizing (Hình dung)</div>
+                    <div class="strategy-desc">Pictures you see in your head while you read.</div>
+                </div>
+
+                <div class="card">
+                    <h3 style="color:#be185d; margin-top:0;">📝 Words to Know</h3>
+                    <div class="words-to-know-item">
+                        <button class="speak-btn-sm" onclick="speak('A country’s flag is a symbol.')">🔊</button>
+                        <div class="wtk-sentence">1. A <span class="wtk-word">country</span>'s flag is a <span class="wtk-word">symbol</span>.</div>
+                    </div>
+                    <div class="words-to-know-item">
+                        <button class="speak-btn-sm" onclick="speak('People live and work in their community.')">🔊</button>
+                        <div class="wtk-sentence">2. People live and work in their <span class="wtk-word">community</span>.</div>
+                    </div>
+                    <div class="words-to-know-item">
+                        <button class="speak-btn-sm" onclick="speak('The American flag is red, white, and blue.')">🔊</button>
+                        <div class="wtk-sentence">3. The American flag is red, <span class="wtk-word">white</span>, and <span class="wtk-word">blue</span>.</div>
+                    </div>
+                    <div class="words-to-know-item">
+                        <button class="speak-btn-sm" onclick="speak('What does our flag look like?')">🔊</button>
+                        <div class="wtk-sentence">4. What does <span class="wtk-word">our</span> flag look like?</div>
+                    </div>
+
+                    <div style="margin-top:15px; padding-top:10px; border-top:1px dashed #cbd5e1;">
+                         <audio controls style="width: 100%; border-radius: 30px;">
+                            <source src="CS_L1_AUD_U03_p038_03.mp3" type="audio/mpeg">
+                        </audio>
+                    </div>
+                </div>
+
+                <div class="card">
+                   <h3 style="color:#0369a1; margin-top:0;">📖 A Flag</h3>
+                    <div style="margin-bottom:10px;">
+                        <button class="speak-btn" onclick="speak('A flag is a symbol of a country. It shows that we belong to a community.')">🔊</button>
+                        <p class="para-en">A flag is a symbol of a country. It shows that we belong to a community.</p>
+                    </div>
+                    <div style="margin-bottom:10px;">
+                        <button class="speak-btn" onclick="speak('I see a flag at our school. It has a black stripe, a red stripe, and a yellow stripe.')">🔊</button>
+                        <p class="para-en">I see a flag at our school. It has a black stripe, a red stripe, and a yellow stripe.</p>
+                    </div>
+                    <div style="margin-bottom:10px;">
+                        <button class="speak-btn" onclick="speak('I see a flag at the soccer game. It is green, yellow, and blue. It has 27 white stars.')">🔊</button>
+                        <p class="para-en">I see a flag at the soccer game. It is green, yellow, and blue. It has 27 white stars.</p>
+                    </div>
+                    <div style="margin-bottom:10px;">
+                        <button class="speak-btn" onclick="speak('I see a flag at the zoo. It is red, white, and blue.')">🔊</button>
+                        <p class="para-en">I see a flag at the zoo. It is red, white, and blue.</p>
+                    </div>
+                    <div style="margin-bottom:10px;">
+                        <button class="speak-btn" onclick="speak('There is even an Olympic flag! It has 5 colored rings.')">🔊</button>
+                        <p class="para-en">There is even an Olympic flag! It has 5 colored rings.</p>
+                    </div>
+                    <div style="margin-bottom:10px;">
+                        <button class="speak-btn" onclick="speak('I see a blue ring, a yellow ring, a black ring, a green ring, and a red ring.')">🔊</button>
+                        <p class="para-en">I see a blue ring, a yellow ring, a black ring, a green ring, and a red ring.</p>
+                    </div>
+                    <div style="margin-bottom:10px;">
+                        <button class="speak-btn" onclick="speak('Flags are seen in lots of places. Look around. Do you see your country’s flag?')">🔊</button>
+                        <p class="para-en">Flags are seen in lots of places. Look around. Do you see your country’s flag?</p>
+                    </div>
+
+                    <div style="margin-top:20px; padding-top:15px; border-top:1px dashed #cbd5e1;">
+                        <audio controls style="width: 100%; border-radius: 30px; background:#f1f5f9;">
+                            <source src="CS_L1_AUD_U03_p041.mp3" type="audio/mpeg">
+                        </audio>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3 style="color:#15803d; margin-top:0;">🤔 Think It Over</h3>
+                    <div class="think-question">
+                        <div class="think-q-text">1. What does a flag symbolize?</div>
+                        <textarea class="think-answer-area"></textarea>
+                    </div>
+                    <div class="think-question">
+                        <div class="think-q-text">2. What does the flag at the soccer game look like?</div>
+                        <textarea class="think-answer-area"></textarea>
+                    </div>
+                    <div class="think-question">
+                        <div class="think-q-text">3. What colors are the rings on the Olympic flag?</div>
+                        <textarea class="think-answer-area"></textarea>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB 3: VOCABULARY -->
+        <div id="tab-vocab" class="section">
+            <div style="text-align: center; margin-bottom: 15px; background: white; padding: 10px; border-radius: 15px; border: 2px dashed #fda4af;">
+                <span style="font-size: 1.5rem;">👆</span> Chạm thẻ để lật - Bấm loa để nghe
+            </div>
+            <div class="vocab-grid" id="vocab-container"></div>
+        </div>
+
+        <!-- TAB 4: GRAMMAR & WRITING -->
+        <div id="tab-grammar" class="section">
+            <div class="sub-tabs">
+                <button class="sub-tab-btn active" onclick="showSubTab('gram', 'g1', this)">1. Verbs -ing</button>
+                <button class="sub-tab-btn" onclick="showSubTab('gram', 'g2', this)">2. Adjectives</button>
+                <button class="sub-tab-btn" onclick="showSubTab('gram', 'g3', this)">3. Simple Present</button>
+                <button class="sub-tab-btn" onclick="showSubTab('gram', 'gw', this)">4. Write</button>
+            </div>
+
+            <!-- G1 -->
+            <div id="g1" class="sub-content active">
+                <div class="grammar-box">
+                    <div class="grammar-rule">Verbs with -ing</div>
+                    <div style="font-style: italic; color: #0c4a6e; margin-bottom: 15px;">Talking about things you are doing now.</div>
+                    <h4>Practice: am, is, or are?</h4>
+                    <div class="practice-item">1. I <input type="text" class="practice-input" style="width:50px;"> eating rice.</div>
+                    <div class="practice-item">2. He <input type="text" class="practice-input" style="width:50px;"> kicking the ball.</div>
+                    <div class="practice-item">3. You <input type="text" class="practice-input" style="width:50px;"> sleeping.</div>
+                </div>
+            </div>
+
+            <!-- G2 -->
+            <div id="g2" class="sub-content">
+                <div class="grammar-box">
+                    <div class="grammar-rule">Adjectives</div>
+                    <div style="font-style: italic; color: #0c4a6e; margin-bottom: 15px;">Describes a noun (person, place, thing).</div>
+                    <div>Example: <br>• I see a <b>green</b> frog.<br>• My shoes are <b>black</b>.</div>
+                    <h4>Practice: Unscramble</h4>
+                    <div class="practice-item">1. tall / I / am : <input type="text" class="practice-input"></div>
+                    <div class="practice-item">2. nice / You / are : <input type="text" class="practice-input"></div>
+                </div>
+            </div>
+
+            <!-- G3 -->
+            <div id="g3" class="sub-content">
+                <div class="grammar-box">
+                    <div class="grammar-rule">Simple Present Statements</div>
+                    <div style="font-style: italic; color: #0c4a6e; margin-bottom: 15px;">For things that happen often.</div>
+                    <div>• I <b>get up</b> at 6.<br>• She <b>plays</b> outside. (Add -s for he/she)</div>
+                    <h4>Practice: Fill in</h4>
+                    <div class="practice-item">1. (sleep) She <input type="text" class="practice-input" style="width:80px;"> late.</div>
+                    <div class="practice-item">2. (walk) He <input type="text" class="practice-input" style="width:80px;"> to work.</div>
+                </div>
+            </div>
+
+            <!-- Writing -->
+            <div id="gw" class="sub-content">
+                <div class="card">
+                    <h3 style="color:#d946ef; margin-top:0;">✍️ Writing Workshop</h3>
+                    <p style="font-weight:bold;">Write a Descriptive Paragraph</p>
+                    <textarea style="width:100%; height:120px; padding:10px; border-radius:10px; border:2px solid #f9a8d4;" placeholder="Describe a place you like..."></textarea>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB 5: PUT IT TOGETHER -->
+        <div id="tab-together" class="section">
+            <div class="sub-tabs">
+                <button class="sub-tab-btn active" onclick="showSubTab('tog', 't1', this)">1. Projects</button>
+                <button class="sub-tab-btn" onclick="showSubTab('tog', 't2', this)">2. Game</button>
+            </div>
+
+            <!-- T1: PROJECTS -->
+            <div id="t1" class="sub-content active">
+                <div class="card" style="background:#fff7ed; border-color:#fdba74;">
+                    <div class="card-title" style="color:#c2410c; font-weight:bold; margin-bottom:10px;">🎨 Projects</div>
+                    
+                    <div style="margin-bottom:15px; background:white; padding:10px; border-radius:10px;">
+                        <div style="font-weight:bold; color:#c2410c;">Written</div>
+                        <div style="font-size:0.9rem;">Write about a family celebration. What do you do? Who is there?</div>
+                    </div>
+
+                    <div style="margin-bottom:15px; background:white; padding:10px; border-radius:10px;">
+                        <div style="font-weight:bold; color:#c2410c;">Visual/Active</div>
+                        <div style="font-size:0.9rem;">Draw a picture of a family celebration.</div>
+                    </div>
+
+                    <div style="background:white; padding:10px; border-radius:10px;">
+                        <div style="font-weight:bold; color:#c2410c;">Oral</div>
+                        <div style="font-size:0.9rem;">Describe a family celebration without saying the name. Let friends guess.</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- T2: GAME -->
+            <div id="t2" class="sub-content">
+                <div class="card" style="background:#ecfdf5; border-color:#6ee7b7;">
+                    <div class="card-title" style="color:#047857; font-weight:bold; margin-bottom:10px;">🗣️ Description Guessing Game</div>
+                    <p style="font-size:0.9rem;">Describe an animal without showing the picture.</p>
+                    
+                    <div style="background:white; padding:15px; border-radius:15px; margin-bottom:15px;">
+                        <h4 style="margin-top:0; color:#059669;">Useful Language:</h4>
+                        <ul style="font-size:0.95rem; color:#4b5563; line-height:1.6;">
+                            <li>"My animal is small and blue."</li>
+                            <li>"My animal can fly."</li>
+                            <li>"It eats worms."</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <nav>
+        <div class="nav-item active" onclick="switchTab('overview', this)"><span class="nav-icon">🏠</span>Home</div>
+        <div class="nav-item" onclick="switchTab('readings', this)"><span class="nav-icon">📖</span>Read</div>
+        <div class="nav-item" onclick="switchTab('vocab', this)"><span class="nav-icon">🔤</span>Vocab</div>
+        <div class="nav-item" onclick="switchTab('grammar', this)"><span class="nav-icon">✍️</span>Grammar</div>
+        <div class="nav-item" onclick="switchTab('together', this)"><span class="nav-icon">🧩</span>Total</div>
+    </nav>
+
+    <script>
+        let voices = [];
+        const loadVoices = () => { voices = window.speechSynthesis.getVoices(); };
+        if ('speechSynthesis' in window) {
+            speechSynthesis.onvoiceschanged = loadVoices;
+            loadVoices();
+        }
+
+        function speak(text) {
+            window.speechSynthesis.cancel();
+            if (voices.length === 0) loadVoices();
+            const msg = new SpeechSynthesisUtterance(text);
+            msg.lang = 'en-US';
+            msg.rate = 0.8;
+            const usVoice = voices.find(v => v.lang === 'en-US' && v.name.includes('Samantha')) || voices.find(v => v.lang === 'en-US');
+            if (usVoice) msg.voice = usVoice;
+            window.speechSynthesis.speak(msg);
+        }
+
+        function switchTab(id, el) {
+            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+            document.getElementById('tab-' + id).classList.add('active');
+            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+            el.classList.add('active');
+            document.querySelector('main').scrollTop = 0;
+        }
+
+        function showSubTab(group, id, el) {
+            const parent = el.parentElement.parentElement;
+            parent.querySelectorAll('.sub-content').forEach(s => s.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
+            el.parentElement.querySelectorAll('.sub-tab-btn').forEach(b => b.classList.remove('active'));
+            el.classList.add('active');
+        }
+
+        const vocab = [
+            { w: "tradition", m: "truyền thống", ipa: "/trəˈdɪʃ.ən/", icon: "🎎" },
+            { w: "celebrate", m: "ăn mừng", ipa: "/ˈsel.ə.breɪt/", icon: "🎉" },
+            { w: "carnival", m: "lễ hội hóa trang", ipa: "/ˈkɑːr.nə.vəl/", icon: "🎭" },
+            { w: "costume", m: "trang phục", ipa: "/ˈkɑː.stuːm/", icon: "🦸" },
+            { w: "mask", m: "mặt nạ", ipa: "/mæsk/", icon: "👺" },
+            { w: "dragon", m: "con rồng", ipa: "/ˈdræɡ.ən/", icon: "🐉" },
+            { w: "envelopes", m: "phong bao lì xì", ipa: "/ˈɑːn.və.loʊps/", icon: "🧧" },
+            { w: "parade", m: "diễu hành", ipa: "/pəˈreɪd/", icon: "🥁" },
+            { w: "flag", m: "lá cờ", ipa: "/flæɡ/", icon: "🚩" },
+            { w: "symbol", m: "biểu tượng", ipa: "/ˈsɪm.bəl/", icon: "⚜️" },
+            { w: "community", m: "cộng đồng", ipa: "/kəˈmjuː.nə.t̬i/", icon: "🏘️" },
+            { w: "white", m: "màu trắng", ipa: "/waɪt/", icon: "⚪" },
+            { w: "blue", m: "màu xanh", ipa: "/bluː/", icon: "🔵" },
+            { w: "green", m: "màu xanh lá", ipa: "/ɡriːn/", icon: "🟢" },
+            { w: "yellow", m: "màu vàng", ipa: "/ˈjel.oʊ/", icon: "🟡" }
+        ];
+
+        window.onload = () => {
+            document.getElementById('sound-check').style.display = 'block';
+            const vContainer = document.getElementById('vocab-container');
+            if (vContainer) {
+                vocab.forEach(v => {
+                    vContainer.innerHTML += `
+                    <div class="flip-card" onclick="this.classList.toggle('flipped')">
+                        <div class="flip-card-inner">
+                            <div class="flip-front">
+                                <span class="word-img">${v.icon}</span>
+                                <h3 class="word-text">${v.w}</h3>
+                                <div class="ipa-badge">${v.ipa}</div>
+                                <button class="card-speak-btn" onclick="event.stopPropagation(); speak('${v.w}')">🔊</button>
+                            </div>
+                            <div class="flip-back">
+                                <h3 style="font-size:1.4rem; color:#be123c;">${v.m}</h3>
+                                <button class="card-speak-btn" style="background:white;" onclick="event.stopPropagation(); speak('${v.w}')">🔊</button>
+                            </div>
+                        </div>
+                    </div>`;
+                });
+            }
+        };
+    </script>
+</body>
+</html>
